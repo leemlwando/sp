@@ -9,14 +9,23 @@ const ParentSchema = new Schema({
     //identity
     firstName:{type:String,lowercase:true,required:true},
     lastName:{type:String,lowercase:true,required:true},
-    otherNames:{type:String,lowercase:true,required:true},
-    email:{type:String,lowercase:true,required:true},
+    otherNames:[{type:String,lowercase:true,required:true}],
+    email:{
+        id:{type:String,index:true,unique:true,lowercase:true,required:true},
+        confirmed:{type:Boolean,default:false}
+        
+    },
     phone:{
-        mobile:{number:String,required:true,confirmed:{type:Boolean, default:false}},
-        landline:{number:String,confirmed:{type:Boolean, default:false}},
-        other:[{number:String,confirmed:{type:Boolean,default:false}}]
+        mobile:{number:{type:String,required:true, unique:true},confirmed:{type:Boolean, default:false}},
+        landline:{number:{type:String},confirmed:{type:Boolean, default:false}},
+        other:[{number:{type:String},confirmed:{type:Boolean, default:false}}]
     },
     password:{type:String,required:true},
+    type:{
+        type:String,
+        required:true,
+        enum:["parent","guardian"]
+    },
 
         //location
         address:{type:String,lowercase:true,required:true},
@@ -25,7 +34,7 @@ const ParentSchema = new Schema({
         country:{type:String,lowercase:true,required:true},
 
             //features
-            students:[],
+            students:[{type:Schema.Types.ObjectId,ref:"Students"}],
             notifications:[],
             messages:[],
             issues:[]
@@ -60,7 +69,8 @@ const StudentSchema = new Schema({
             },
             notifications:[],
             issues:[],
-            guidanceCouncillors:[]
+            guidanceCouncillors:[],
+            parents:[{type:Schema.Types.ObjectId,ref:"Guardians"}]
 });
 
 /**
